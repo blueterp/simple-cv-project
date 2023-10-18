@@ -21,10 +21,5 @@ repos:
       - id: pylint
         name: pylint
         entry: pylint
-        pass_filenames: false
         language: system
         types: [python]
-        args: [
-            "-rn", # Only display messages
-            "-sn", # Don't display the score
-          ]
