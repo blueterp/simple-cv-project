@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "simple-cv-project"
+version = "0.1.0"
+description = ""
+authors = ["Jonathan Howarth <jonathan.michael.howarth@gmail.com>"]
+readme = "README.md"
+packages = [{include = "simple_cv_project"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+numpy = "^1.26.1"
+opencv-python = "^4.8.1.78"
+sk-video = "^1.1.10"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.10.0"
+pylint = "^3.0.1"
+pytest = "^7.4.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
