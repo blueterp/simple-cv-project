@@ -4,6 +4,9 @@ import cv2
 
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+# fourcc = cv2.VideoWriter_fourcc(*"XVID")
+# fourcc = cv2.VideoWriter_fourcc(*"MJPG")
+# out = cv2.VideoWriter("output.avi", fourcc, 20.0, (640, 480))
 sleep(1)
 if not cap.isOpened():
     print("Cannot open camera")
@@ -15,12 +18,9 @@ while True:
     if not ret:
         print("Can't receive frame (stream end?). Exiting ...")
         break
-    # Our operations on the frame come here
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    # Display the resulting frame
-    cv2.imshow("frame", gray)
+    # out.write(frame)
+    cv2.imshow("frame", frame)
     if cv2.waitKey(1) == ord("q"):
         break
-# When everything done, release the capture
 cap.release()
 cv2.destroyAllWindows()
