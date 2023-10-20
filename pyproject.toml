@@ -12,6 +12,7 @@ numpy = "^1.26.1"
 opencv-python = "^4.8.1.78"
 sk-video = "^1.1.10"
 pre-commit = "^3.5.0"
+matplotlib = "^3.8.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.10.0"
