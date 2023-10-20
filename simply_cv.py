@@ -2,7 +2,7 @@ from time import sleep
 import numpy as np
 import cv2
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("vtest.avi")
 cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 # fourcc = cv2.VideoWriter_fourcc(*"XVID")
 # fourcc = cv2.VideoWriter_fourcc(*"MJPG")
@@ -20,7 +20,7 @@ while True:
         break
     # out.write(frame)
     cv2.imshow("frame", frame)
-    if cv2.waitKey(1) == ord("q"):
+    if cv2.waitKey(3000) == ord("q"):
         break
 cap.release()
 cv2.destroyAllWindows()

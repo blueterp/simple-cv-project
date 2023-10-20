@@ -1,6 +1,7 @@
 from time import sleep
 import numpy as np
 import cv2
+from matplotlib import pyplot as plt
 
 # for web camera
 # cap = cv2.VideoCapture(0)
@@ -18,7 +19,16 @@ while cap.isOpened():
     _, thresh = cv2.threshold(blur, 20, 255, cv2.THRESH_BINARY)
     dilated = cv2.dilate(thresh, None, iterations=3)
     contours, _ = cv2.findContours(dilated, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    # titles = ["gray", "blur", "thresh", "dilated", "contours"]
+    # images = [gray, blur, thresh, dilated, contours]
 
+    # titles = ["gray", "blur"]
+    # images = [gray, blur]
+    # for i in range(2):
+    #     plt.subplot(1, 2, i + 1), plt.imshow(images[i], "gray")
+    #     plt.title(titles[i])
+    #     plt.xticks([]), plt.yticks([])
+    #     plt.show()
     for contour in contours:
         (x, y, w, h) = cv2.boundingRect(contour)
         if cv2.contourArea(contour) < 900:
@@ -27,7 +37,7 @@ while cap.isOpened():
         cv2.putText(
             frame1,
             f"Status: Movement",
-            (x, y),
+            (10, 20),
             cv2.FONT_HERSHEY_SIMPLEX,
             1,
             (0, 0, 255),
