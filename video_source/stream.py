@@ -23,13 +23,11 @@ class Stream:
         self.video_capture = None
         self.is_open = self.video_capture.isOpened() if self.video_capture else False
 
-    def stream(self, duration_seconds=10, show=True):
-        t_end = time() + duration_seconds
+    def stream(self, show=True):
+        # t_end = time() + duration_seconds
 
-        while time() < t_end:
-            ret, frame = self.video_capture.read()
-            if show:
-                cv.imshow("frame", frame)
-                if cv.waitKey(1) == ord("q"):
-                    break
+        ret, frame = self.video_capture.read()
+        if show:
+            cv.imshow("frame", frame)
+            cv.waitKey(1)
         return ret, frame
