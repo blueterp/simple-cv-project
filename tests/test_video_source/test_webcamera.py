@@ -16,7 +16,10 @@ def test_create_webcamera_stream():
     camera = WebCamera(Stream(0))
 
     with camera.stream as stream:
-        stream.stream()
+        i = 0
+        while i < 100:
+            stream.stream()
+            i += 1
         assert stream.is_open
 
     assert not stream.is_open
