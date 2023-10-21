@@ -12,6 +12,9 @@ cap = cv2.VideoCapture("vtest.avi")
 if cap.isOpened():
     _, frame1 = cap.read()
     _, frame2 = cap.read()
+
+    cv2.imwrite("frame1.png", frame1)
+    cv2.imwrite("frame2.png", frame2)
 while cap.isOpened():
     diff = cv2.absdiff(frame1, frame2)
     gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
@@ -34,17 +37,19 @@ while cap.isOpened():
         if cv2.contourArea(contour) < 900:
             continue
         cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        cv2.putText(
-            frame1,
-            f"Status: Movement",
-            (10, 20),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            1,
-            (0, 0, 255),
-            3,
-        )
+        # cv2.putText(
+        #     frame1,
+        #     f"Status: Movement",
+        #     (10, 20),
+        #     cv2.FONT_HERSHEY_SIMPLEX,
+        #     1,
+        #     (0, 0, 255),
+        #     3,
+        # )
     # cv2.drawContours(frame1, contours, -1, (0, 255, 0), 2)
+    cv2.imwrite("contours_ground_truth.png", frame1)
     cv2.imshow("frame", frame1)
+    break
 
     frame1 = frame2
     ret, frame2 = cap.read()
