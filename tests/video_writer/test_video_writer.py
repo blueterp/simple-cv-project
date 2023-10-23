@@ -17,5 +17,19 @@ def test_write_video(tmp_path, data_directory):
     assert os.path.isfile(os.path.join(tmp_path, "test_save.avi"))
 
 
+def test_write_with_buffer(data_directory):
+    buffer = []
+    frame1 = cv.imread(os.path.join(data_directory, "frame1.png"))
+    frame2 = cv.imread(os.path.join(data_directory, "frame2.png"))
+    for i in range(100):
+        buffer.append(frame2)
+    writer = VideoWriter(os.path.join(data_directory, "test_save_buffer.avi"))
+    with writer:
+        writer.write(frame1)
+        writer.write(frame2)
+
+    assert os.path.isfile(os.path.join(data_directory, "test_save.avi"))
+
+
 if __name__ == "__main__":
     pytest.main()
