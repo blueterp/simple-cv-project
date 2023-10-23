@@ -9,10 +9,12 @@ packages = [{include = "simple_cv_project"}]
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 numpy = "^1.26.1"
-opencv-python = "^4.8.1.78"
 sk-video = "^1.1.10"
 pre-commit = "^3.5.0"
 matplotlib = "^3.8.0"
+torch = "1.11"
+opencv-python = "^4.8.1.78"
+ultralytics = "^8.0.200"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.10.0"
