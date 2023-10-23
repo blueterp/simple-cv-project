@@ -18,6 +18,6 @@ def draw_contours(frame, contours):
             continue
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    cv2.imshow("frame", frame)
-    cv2.waitKey(1)
+    # cv2.imshow("frame", frame)
+    # cv2.waitKey(1)
     return frame
