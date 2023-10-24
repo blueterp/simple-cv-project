@@ -1,8 +1,9 @@
 import cv2 as cv
 from time import time, sleep
+from video_source.video_source_interface import VideoSource
 
 
-class Stream:
+class Stream(VideoSource):
     def __init__(self, connection_info):
         self.connection_info = connection_info
         self.is_open = False
@@ -30,8 +31,6 @@ class Stream:
         self.is_open = False
 
     def stream(self, show=False):
-        # if not self.is_open:
-        #     raise
         ret, frame = self.video_capture.read()
         if not ret:
             print("stream has ended or there is an error")
