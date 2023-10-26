@@ -10,7 +10,8 @@ class VideoWriter:
         buffer=None,
         frame_rate=20.0,
         fourcc=cv2.VideoWriter_fourcc(*"MJPG"),
-        file_name_preface="",
+        file_name=None,
+        include_timestamp=True,
     ):
         self.frame_rate = frame_rate
         self.width = video_width
@@ -18,38 +19,43 @@ class VideoWriter:
         self.fourcc = fourcc
         self.writer = None
         self.buffer = buffer
-        self.file_name_preface = file_name_preface
+        self.file_name = file_name
+        self.include_timestamp = include_timestamp
 
     def write(self, frame):
         if not self.writer:
-            raise Exception("Cannot write to file. Writer is Closed")
+            raise AttributeError("Cannot write to file. Writer is Closed")
         self.writer.write(frame)
 
-    # def __enter__(self):
-    #     self.writer = cv2.VideoWriter(
-    #         self.file_name,
-    #         self.fourcc,
-    #         self.frame_rate,
-    #         (self.width, self.height),
-    #     )
-    #     if self.buffer:
-    #         for frame in self.buffer:
-    #             self.writer.write(frame)
-    #         self.buffer = None
+    def __enter__(self):
+        self.open(
+            buffer=self.buffer,
+            file_name=self.file_name,
+            include_timestamp=self.include_timestamp,
+        )
 
-    # def __exit__(self, exc_type, exc_val, exc_tb):
-    #     self.writer.release()
-    #     self.writer = None
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.writer.release()
+        self.writer = None
 
-    def open(self, file_name=None, buffer=None):
-        if not file_name:
-            file_preface = (
-                "" if len(self.file_name_preface) == 0 else f"{self.file_name_preface}_"
-            )
-            file_name = f"{file_preface}{datetime.now().strftime('%Y%m%d_%H:%M:%S')}"
+    def _generate_file_name(self, file_name, include_timestamp):
+        if not file_name and not include_timestamp:
+            raise ValueError("Must provide file_name or set include_timestampt to True")
+        file_name = file_name + "_" if file_name else ""
+        timestamp = (
+            datetime.now().strftime("%Y%m%d_%H:%M:%S") + "_"
+            if include_timestamp
+            else ""
+        )
+
+        return f"{file_name}_{timestamp}".rstrip("_")
+
+    def open(self, file_name=None, buffer=None, include_timestamp=True):
+        file_name = self._generate_file_name(file_name, include_timestamp)
+        print("filename", file_name)
         self.writer = cv2.VideoWriter(
             file_name,
-            cv2.VideoWriter_fourcc(*"MJPG"),
+            self.fourcc,
             self.frame_rate,
             (self.width, self.height),
         )
@@ -57,6 +63,7 @@ class VideoWriter:
         if buffer:
             for item in buffer:
                 self.writer.write(item)
+            self.buffer = None
 
     def release(self):
         self.writer.release()
