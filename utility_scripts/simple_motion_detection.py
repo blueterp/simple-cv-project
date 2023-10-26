@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 # cap = cv2.VideoCapture(0)
 # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
-cap = cv2.VideoCapture("vtest.avi")
+cap = cv2.VideoCapture("tests/test_data/vtest.avi")
 
 if cap.isOpened():
     _, frame1 = cap.read()
