@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 import os
 import cv2 as cv
-from video_writer.video_writer import VideoWriter
+from video_writer.local_video_writer import LocalVideoWriter
 
 # test writing when writer is closed
 # test written frames were what was specified
@@ -25,7 +25,7 @@ def frame_size(frames):
 def test_write_video_when_writer_closed(frames, frame_size, tmp_path):
     frame1, _ = frames
     height, width = frame_size
-    writer = VideoWriter(
+    writer = LocalVideoWriter(
         width,
         height,
         file_name=os.path.join(tmp_path, "test_save.avi"),
@@ -37,7 +37,7 @@ def test_write_video_when_writer_closed(frames, frame_size, tmp_path):
 def test_write_video(tmp_path, frames, frame_size):
     frame1, frame2 = frames
     height, width = frame_size
-    writer = VideoWriter(
+    writer = LocalVideoWriter(
         width,
         height,
         file_name=os.path.join(tmp_path, "test_save.avi"),
@@ -56,7 +56,7 @@ def test_write_with_buffer(frames, frame_size, tmp_path):
     width, height = frame_size
     for i in range(100):
         buffer.append(frame2)
-    writer = VideoWriter(
+    writer = LocalVideoWriter(
         height,
         width,
         file_name=os.path.join(tmp_path, "test_save_buffer.avi"),

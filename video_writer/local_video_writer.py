@@ -1,8 +1,9 @@
 import cv2
 from datetime import datetime
+from video_writer.video_writer_interface import VideoWriterInterface
 
 
-class VideoWriter:
+class LocalVideoWriter(VideoWriterInterface):
     def __init__(
         self,
         video_width,
