@@ -1,10 +1,7 @@
 from time import time
 from datetime import datetime as dt
 import cv2 as cv
-from collections import deque
-from video_writer.local_video_writer import VideoWriter
-from video_source.stream import Stream
-from utils.frame_buffer import FrameBuffer
+from utils.stream_buffer import StreamBuffer
 from detectors.detector_interface import Detector
 from video_source.video_source_interface import VideoSource
 from video_writer.video_writer_interface import VideoWriterInterface
@@ -16,7 +13,7 @@ def monitor_stream(stream:VideoSource, detector:Detector, stream_writer:VideoWri
     SECONDS_TO_RECORD_AFTER_DETECTION = 5
 
     with stream as s:
-        stream_buffer = FrameBuffer(max_length=leading_buffer_seconds*20)
+        stream_buffer = StreamBuffer(max_length=leading_buffer_seconds*20)
 
         while True:
             detector.stream_frames(s)
