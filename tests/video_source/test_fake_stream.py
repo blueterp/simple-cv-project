@@ -9,13 +9,6 @@ def get_frame_dimensions(frame):
     return frame.shape
 
 
-@pytest.fixture
-def frames(data_directory):
-    frame1 = cv.imread(os.path.join(data_directory, "frame1.png"))
-    frame2 = cv.imread(os.path.join(data_directory, "frame2.png"))
-    return (frame1, frame2)
-
-
 def test_create_fake_stream_non_matching_frames(frames):
     frame1, frame2 = frames
     width, height, _ = get_frame_dimensions(frame1)
