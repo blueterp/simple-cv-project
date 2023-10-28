@@ -2,12 +2,13 @@ from abc import ABC, abstractclassmethod
 
 
 class Detector(ABC):
-    def __init__(self):
+    def __init__(self, stream):
         self.frame_idx = 0
         self.frames = []
+        self.stream = stream
 
     @abstractclassmethod
-    def stream_frames(self, stream):
+    def stream_frames(self):
         pass
 
     @abstractclassmethod
@@ -15,7 +16,7 @@ class Detector(ABC):
         pass
 
     @abstractclassmethod
-    def detects_contours(stream):
+    def detects_contours(self, stream):
         pass
 
     @abstractclassmethod
