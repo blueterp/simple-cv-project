@@ -11,19 +11,14 @@ def monitor_stream(stream:VideoSource, detector:Detector, stream_writer:VideoWri
     detection_stopped_time = None
     timer_started = False
     SECONDS_TO_RECORD_AFTER_DETECTION = 5
-
     with stream as s:
         stream_buffer = StreamBuffer(max_length=leading_buffer_seconds*20)
-
         while True:
             detector.stream_frames(s)
-
             if detector.get_active_frame() is None:
                 print("No frames to stream. Closing stream down.")
                 break
-
             detector.detect()
-
             if detector.detects_contours():
                 if detection:
                     timer_started = False
@@ -46,14 +41,12 @@ def monitor_stream(stream:VideoSource, detector:Detector, stream_writer:VideoWri
                     detection_stopped_time = time()
 
             if detection:
-                # leading_frame = detector.draw_contours(leading_frame, contours)
                 stream_writer.write(detector.get_active_frame())
 
             stream_buffer.enque(detector.get_active_frame())
 
         if stream_writer.is_open():
             stream_writer.release()
-
     cv.destroyAllWindows()
 
 
