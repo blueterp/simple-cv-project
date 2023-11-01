@@ -13,6 +13,8 @@ class ObjectDetector(Detector):
         video_source: VideoSource,
         model="models/yolov8n.pt",
         class_list="models/coco.txt",
+        confidence=0.45,
+        save=False,
     ) -> None:
         self.frame = None
         self.stream = video_source
@@ -21,6 +23,8 @@ class ObjectDetector(Detector):
         self.class_list = self._get_classes_from_list(class_list)
         self.detection_colors = self._generate_detection_colors()
         self.model = YOLO(model)
+        self.confidence = confidence
+        self.save = save
 
     def _get_classes_from_list(self, class_list):
         with open(class_list, "r") as f:
@@ -40,15 +44,20 @@ class ObjectDetector(Detector):
     def stream_frames(self):
         ret, frame = self.stream.stream()
         self.frame = frame if ret else None
+        if self.frame is None:
+            print("No more frames to stream. Closing detector.")
+        else:
+            self.detect()
+        return self.frame
 
-    def detect(self, confidence=0.45, save=False):
+    def detect(self):
         if self.frame is None:
             raise ValueError("No frame present. Cannot detect objects.")
         if not self.frame is None:
             self.contours = []
 
         detect_params = self.model.predict(
-            source=[self.frame], conf=confidence, save=save
+            source=[self.frame], conf=self.confidence, save=self.save
         )
         self.boxes = detect_params[0].boxes
         self.contours = detect_params[0].numpy()
