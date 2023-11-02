@@ -30,14 +30,13 @@ def test_writes_successfully_when_writer_is_open(frames, tmp_path):
     writer.open(file_name=os.path.join(tmp_path, "fake.avi"))
     writer.write(frame)
     writer.release()
-
     assert os.path.isfile(os.path.join(tmp_path, "fake.avi"))
 
 
 def test_writer_using_context_manager(frames, tmp_path):
-    writer = FakeVideoWriter(file_name=os.path.join(tmp_path, "fake.avi"))
+    writer = FakeVideoWriter()
     frame, _ = frames
-    with writer:
+    with writer(file_name=os.path.join(tmp_path, "fake.avi")):
         writer.write(frame)
 
     assert os.path.isfile(os.path.join(tmp_path, "fake.avi"))
