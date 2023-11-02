@@ -11,8 +11,6 @@ class LocalVideoWriter(VideoWriterInterface):
         buffer=None,
         frame_rate=20.0,
         fourcc=cv2.VideoWriter_fourcc(*"MJPG"),
-        file_name=None,
-        include_timestamp=True,
     ):
         self.frame_rate = frame_rate
         self.width = video_width
@@ -20,19 +18,22 @@ class LocalVideoWriter(VideoWriterInterface):
         self.fourcc = fourcc
         self.writer = None
         self.buffer = buffer
-        self.file_name = file_name
-        self.include_timestamp = include_timestamp
 
     def write(self, frame):
         if not self.writer:
             raise AttributeError("Cannot write to file. Writer is Closed")
         self.writer.write(frame)
 
+    def __call__(self, file_name=None, include_timestamp=False):
+        self.file_name = self._generate_file_name(file_name, include_timestamp)
+        print("FILENAME")
+        print(self.file_name)
+        return self
+
     def __enter__(self):
         self.open(
             buffer=self.buffer,
             file_name=self.file_name,
-            include_timestamp=self.include_timestamp,
         )
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -49,13 +50,12 @@ class LocalVideoWriter(VideoWriterInterface):
             else ""
         )
 
-        return f"{file_name}_{timestamp}".rstrip("_")
+        return f"{file_name}_{timestamp}".strip("_")
 
-    def open(self, file_name=None, buffer=None, include_timestamp=True):
-        file_name = self._generate_file_name(file_name, include_timestamp)
-        print("filename", file_name)
+    def open(self, file_name=None, buffer=None, include_timestamp=False):
+        self.__call__(file_name, include_timestamp)
         self.writer = cv2.VideoWriter(
-            file_name,
+            self.file_name,
             self.fourcc,
             self.frame_rate,
             (self.width, self.height),
@@ -64,7 +64,7 @@ class LocalVideoWriter(VideoWriterInterface):
         if buffer:
             for item in buffer:
                 self.writer.write(item)
-            self.buffer = None
+            self.buffer.clear_buffer()
 
     def release(self):
         self.writer.release()

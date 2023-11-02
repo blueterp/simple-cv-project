@@ -28,7 +28,6 @@ def test_write_video_when_writer_closed(frames, frame_size, tmp_path):
     writer = LocalVideoWriter(
         width,
         height,
-        file_name=os.path.join(tmp_path, "test_save.avi"),
     )
     with pytest.raises(AttributeError):
         writer.write(frame1)
@@ -40,11 +39,11 @@ def test_write_video(tmp_path, frames, frame_size):
     writer = LocalVideoWriter(
         width,
         height,
-        file_name=os.path.join(tmp_path, "test_save.avi"),
-        include_timestamp=False,
     )
 
-    with writer:
+    with writer(
+        file_name=os.path.join(tmp_path, "test_save.avi"), include_timestamp=False
+    ):
         writer.write(frame1)
         writer.write(frame2)
     assert os.path.isfile(os.path.join(tmp_path, "test_save.avi"))
@@ -59,10 +58,11 @@ def test_write_with_buffer(frames, frame_size, tmp_path):
     writer = LocalVideoWriter(
         height,
         width,
+    )
+    with writer(
         file_name=os.path.join(tmp_path, "test_save_buffer.avi"),
         include_timestamp=False,
-    )
-    with writer:
+    ):
         writer.write(frame1)
         writer.write(frame2)
 
