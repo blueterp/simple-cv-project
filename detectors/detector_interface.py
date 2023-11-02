@@ -3,8 +3,6 @@ from abc import ABC, abstractclassmethod
 
 class Detector(ABC):
     def __init__(self, stream):
-        self.frame_idx = 0
-        self.frames = []
         self.stream = stream
 
     @abstractclassmethod
@@ -16,15 +14,13 @@ class Detector(ABC):
         pass
 
     @abstractclassmethod
-    def detects_contours(self, stream):
+    def detects_contours(self):
         pass
 
     @abstractclassmethod
     def _draw_contours(self):
         pass
 
+    @abstractclassmethod
     def get_active_frame(self):
-        if len(self.frames) == 0 or self.frame_idx >= len(self.frames):
-            return None
-
-        return self.frames[self.frame_idx]
+        pass
