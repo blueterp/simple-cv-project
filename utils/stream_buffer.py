@@ -9,14 +9,14 @@ class StreamBuffer:
     def __iter__(self):
         yield from list(self.queue)
 
-    def enque(self, item):
+    def add_frame(self, item):
         if len(self.queue) > self.max_length:
             self.queue.popleft()
         self.queue.append(item)
 
-    def clear_queue(self):
+    def clear_buffer(self):
         self.queue = deque()
 
-    def dequeue(self):
+    def remove_frame(self):
         if len(self.queue) > 0:
             self.queue.popleft()
