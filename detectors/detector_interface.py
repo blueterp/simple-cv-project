@@ -24,3 +24,11 @@ class Detector(ABC):
     @abstractclassmethod
     def get_active_frame(self):
         pass
+
+    @abstractclassmethod
+    def __enter__(self):
+        pass
+
+    @abstractclassmethod
+    def __exit__(self, exc_type, exc_value, tb):
+        pass

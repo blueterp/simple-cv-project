@@ -7,7 +7,8 @@ class FakeDetector(Detector):
         self.frame = False
 
     def stream_frames(self):
-        self.frame = self.stream.stream()
+        ret, self.frame = self.stream.stream()
+        return ret
 
     def detect(self):
         return self.frame
@@ -20,3 +21,15 @@ class FakeDetector(Detector):
 
     def get_active_frame(self):
         return self.frame
+
+    def open(self):
+        self.stream.open()
+
+    def close(self):
+        self.stream.close()
+
+    def __enter__(self):
+        self.stream.open()
+
+    def __exit__(self, exc_type, exc_value, tb):
+        self.stream.close()

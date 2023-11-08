@@ -96,3 +96,10 @@ class ObjectDetector(Detector):
 
     def get_active_frame(self):
         return self.frame
+
+    def __enter__(self):
+        self.stream.open()
+        return self
+
+    def __exit__(self, exc_type, exc_value, tb):
+        self.stream.close()
