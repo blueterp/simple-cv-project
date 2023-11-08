@@ -2,30 +2,22 @@ from video_source.video_source_interface import VideoSource
 
 
 class FakeStream(VideoSource):
-    def __init__(self, frames):
+    def __init__(self, frames, width=None, height=None):
         if frames is None or len(frames) == 0:
             raise ValueError("Frames must include at least one frame")
         self.frames = self._verify_frames(frames)
         self.is_streaming = False
-        self.width = frames[0].shape[0]
-        self.height = frames[0].shape[1]
         self.frame_idx = 0
+        self.width, self.height = self._get_frame_dimensions(width, height)
+
+    def _get_frame_dimensions(self, width, height):
+        if width is None and height is None:
+            width, height, _ = self.frames[0].shape
+        return width, height
 
     def _verify_frames(self, frames):
         if not frames or len(frames) == 0:
             raise ValueError("Frames cannot be None or empty")
-
-        # All frames must be of the same dimension
-        width_set, height_set, color_set = set(), set(), set()
-        for frame in frames:
-            w, h, c = frame.shape
-            width_set.add(w)
-            height_set.add(h)
-            color_set.add(c)
-
-        if len(width_set) > 1 or len(height_set) > 1 or len(color_set) > 1:
-            raise ValueError("All frames must have same dimensions")
-
         return frames
 
     def __enter__(self):

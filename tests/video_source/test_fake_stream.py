@@ -9,16 +9,6 @@ def get_frame_dimensions(frame):
     return frame.shape
 
 
-def test_create_fake_stream_non_matching_frames(frames):
-    frame1, frame2 = frames
-    width, height, _ = get_frame_dimensions(frame1)
-    frame2 = cv.resize(frame2, (0, 0), fx=0.5, fy=0.5)
-    modified_frames = [frame1, frame2]
-
-    with pytest.raises(ValueError):
-        stream = FakeStream(modified_frames)
-
-
 def test_create_fake_stream(frames):
     frame1, frame2 = frames
     width, height = frame1.shape[0], frame1.shape[1]

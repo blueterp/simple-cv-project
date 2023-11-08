@@ -13,7 +13,7 @@ class Stream(VideoSource):
             self.width = int(self.video_capture.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
             self.height = int(self.video_capture.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
 
-    def __enter__(self):
+    def open(self):
         self.video_capture = cv.VideoCapture(self.connection_info)
         if not self.video_capture.isOpened():
             raise TypeError(
@@ -22,13 +22,19 @@ class Stream(VideoSource):
         self.is_open = True
         self.video_capture.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*"MJPG"))
         sleep(0.1)
-        return self
 
-    def __exit__(self, exc_type, exc_value, tb):
+    def close(self):
         if self.video_capture:
             self.video_capture.release()
         self.video_capture = None
         self.is_open = False
+
+    def __enter__(self):
+        self.open()
+        return self
+
+    def __exit__(self, exc_type, exc_value, tb):
+        self.close()
 
     def stream(self, show=False):
         ret, frame = self.video_capture.read()
