@@ -24,7 +24,7 @@ class MonitorStream:
 
     def timer_is_expired(self):
         return (
-            time.time() - self.detection_stopped_time
+            time() - self.detection_stopped_time
             >= self.seconds_to_record_after_detection
         )
 
@@ -50,7 +50,7 @@ class MonitorStream:
 
     def check_timer(self):
         if self.timer_started:
-            if self.timer_is_expired:
+            if self.timer_is_expired():
                 self.reset_monitor_writer()
                 print("Stop Recording!")
         else:
@@ -63,6 +63,7 @@ class MonitorStream:
             self.check_timer()
 
         if self.is_recording():
+            detector.show_frame()
             self.stream_writer.write(detector.get_active_frame())
 
         buffer.add_frame(detector.get_active_frame())
@@ -72,68 +73,13 @@ class MonitorStream:
             self.stream_writer.release()
         cv.destroyAllWindows()
 
-    def monitor_detector(
+    def monitor(
         self,
         detector: Detector,
-        show_stream: bool = True,
-        leading_buffer_seconds: int = 5,
+        leading_buffer_seconds: int = 1,
     ) -> None:
         stream_buffer = StreamBuffer(max_length=leading_buffer_seconds * 20)
         with detector:
             while detector.stream_frames():
                 self.process_detection_frame(detector, stream_buffer)
         self.close_open_resources()
-
-        with detector:
-            while detector.stream_frames():
-                self.process_detection_frame(detector, stream_buffer)
-        self.close_open_resources()
-
-
-# def capture_motion(stream: Stream, video_writer: VideoWriter) -> str:
-#     with stream:
-#         queue = Queue(max_length=60)
-#         start_time = time()
-#         _, frame0 = stream.stream()
-#         ret1, frame1 = stream.stream()
-
-#         while True:
-#             if not ret1:
-#                 print("Stream has ended")
-#                 break
-
-#             contours = detect_motion(frame0, frame1)
-#             if contours:
-#                 start_time = time()
-#                 frame0 = draw_contours(frame0, contours)
-
-#                 if not video_writer.is_open():
-#                     file_name = dt.now().strftime("%Y%m%d_%H:%M:%S")
-#                     print(f"Opening {file_name} to write")
-#                     video_writer.open(file_name=f"{file_name}.avi", buffer=queue)
-
-#                 video_writer.write(frame0)
-#                 cv.imshow("frame", frame0)
-#                 if cv.waitKey(50) == ord("q"):
-#                     break
-#             elif start_time + 5 > time() and video_writer.is_open():
-#                 video_writer.write(frame0)
-#                 cv.imshow("frame", frame0)
-#                 if cv.waitKey(50) == ord("q"):
-#                     break
-#             else:
-#                 if video_writer.is_open():
-#                     print(f"Closing {file_name}")
-#                     cv.destroyAllWindows()
-#                     video_writer.release()
-#             queue.enque(frame0)
-#             frame0 = frame1
-#             ret1, frame1 = stream.stream()
-
-#         if video_writer.is_open():
-#             print(f"Closing {file_name}")
-
-#             cv.destroyAllWindows()
-#             video_writer.release()
-
-#         return
