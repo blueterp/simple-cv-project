@@ -1,13 +1,15 @@
+from time import sleep
 from video_source.video_source_interface import VideoSource
 from video_source.stream_exceptions import StreamClosedError
 
 
 class FakeBooleanStream(VideoSource):
-    def __init__(self, frames=None):
+    def __init__(self, frames=None, fps=20):
         self.width, self.height = 0, 0
         self.is_open = False
         self.frames = self._check_frames(frames)
         self.generator = self._make_generator(self.frames)
+        self.throttle = 1 / fps
 
     def open(self):
         self.is_open = True
@@ -26,6 +28,7 @@ class FakeBooleanStream(VideoSource):
         if not self.is_open:
             raise StreamClosedError("Cannot stream frames from closed stream.")
         try:
+            sleep(self.throttle)
             return next(self.generator)
         except StopIteration:
             self.close()
