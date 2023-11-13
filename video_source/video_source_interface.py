@@ -2,7 +2,12 @@ from abc import ABC, abstractclassmethod
 
 
 class VideoSource(ABC):
-    pass
+    @abstractclassmethod
+    def open(self):
+        pass
+
+    def close(self):
+        pass
 
     @abstractclassmethod
     def __enter__(self):
