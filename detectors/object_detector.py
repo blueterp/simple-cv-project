@@ -103,3 +103,8 @@ class ObjectDetector(Detector):
 
     def __exit__(self, exc_type, exc_value, tb):
         self.stream.close()
+
+    def show_frame(self):
+        if self.show_stream:
+            cv.imshow(self.get_active_frame())
+            cv.waitKey(50)
