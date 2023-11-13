@@ -9,9 +9,10 @@ class FakeBooleanDetector(Detector):
     frame indicates if something is detected.
     """
 
-    def __init__(self, stream):
+    def __init__(self, stream, show_stream=False):
         self.stream = self._validate_stream(stream)
         self.frame = None
+        self.show_stream = show_stream
 
     def _validate_stream(self, stream):
         if not stream or not isinstance(stream, VideoSource):
@@ -21,10 +22,10 @@ class FakeBooleanDetector(Detector):
     def stream_frames(self):
         ret, boolean = self.stream.stream()
         self.frame = boolean if ret else None
-        return ret, boolean
+        return ret
 
     def detect(self):
-        ret, boolean = self.stream_frames()
+        ret = self.stream_frames()
 
     def detects_contours(self):
         return self.frame
@@ -36,8 +37,13 @@ class FakeBooleanDetector(Detector):
         return self.frame
 
     def __enter__(self):
-        self.stream.is_open = True
+        self.stream.open()
+        print(self.stream.is_open)
         return self
 
     def __exit__(self, exc_type, exc_value, tb):
-        self.stream.is_open = False
+        self.stream.close()
+
+    def show_frame(self):
+        if self.show_stream:
+            print(f"Showing Frame: {self.get_active_frame()}")

@@ -34,7 +34,7 @@ def test_detect_frame_when_using_context_manager():
     detector = FakeBooleanDetector(stream)
 
     with detector:
-        ret, boolean = detector.stream_frames()
+        ret = detector.stream_frames()
 
     assert ret
     assert not detector.stream.is_open
@@ -45,7 +45,7 @@ def test_get_active_frame_when_frame_streams_successfully():
     detector = FakeBooleanDetector(stream)
 
     with detector:
-        ret, boolean = detector.stream_frames()
+        ret = detector.stream_frames()
 
     assert detector.get_active_frame() == True
 
@@ -55,9 +55,9 @@ def test_get_active_frame_is_none_if_stream_closes():
     detector = FakeBooleanDetector(stream)
 
     with detector:
-        ret, boolean = detector.stream_frames()
-        ret, boolean = detector.stream_frames()
-        ret, boolean = detector.stream_frames()
+        ret = detector.stream_frames()
+        ret = detector.stream_frames()
+        ret = detector.stream_frames()
 
     assert detector.get_active_frame() is None
 
@@ -68,7 +68,7 @@ def test_detector_returns_correct_detection(frames, detection):
     detector = FakeBooleanDetector(stream)
 
     with detector:
-        ret, boolean = detector.stream_frames()
+        ret = detector.stream_frames()
 
     assert detector.detects_contours() == detection
 

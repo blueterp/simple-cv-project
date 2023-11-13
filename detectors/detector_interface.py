@@ -2,8 +2,9 @@ from abc import ABC, abstractclassmethod
 
 
 class Detector(ABC):
-    def __init__(self, stream):
+    def __init__(self, stream, show_stream=False):
         self.stream = stream
+        self.show_stream = False
 
     @abstractclassmethod
     def stream_frames(self):
@@ -31,4 +32,8 @@ class Detector(ABC):
 
     @abstractclassmethod
     def __exit__(self, exc_type, exc_value, tb):
+        pass
+
+    @abstractclassmethod
+    def show_frame(self):
         pass
