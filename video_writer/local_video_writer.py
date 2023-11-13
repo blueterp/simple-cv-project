@@ -1,4 +1,5 @@
 import cv2
+import os
 from datetime import datetime
 from video_writer.video_writer_interface import VideoWriterInterface
 
@@ -11,6 +12,7 @@ class LocalVideoWriter(VideoWriterInterface):
         buffer=None,
         frame_rate=20.0,
         fourcc=cv2.VideoWriter_fourcc(*"MJPG"),
+        directory="",
     ):
         self.frame_rate = frame_rate
         self.width = video_width
@@ -18,6 +20,10 @@ class LocalVideoWriter(VideoWriterInterface):
         self.fourcc = fourcc
         self.writer = None
         self.buffer = buffer
+        self.directory = directory
+
+    def set_directory(self, directory):
+        self.directory = directory
 
     def write(self, frame):
         if not self.writer:
@@ -50,7 +56,7 @@ class LocalVideoWriter(VideoWriterInterface):
             else ""
         )
 
-        return f"{file_name}_{timestamp}".strip("_")
+        return os.path.join(self.directory, f"{file_name}_{timestamp}".strip("_"))
 
     def open(self, file_name=None, buffer=None, include_timestamp=False):
         self.__call__(file_name, include_timestamp)

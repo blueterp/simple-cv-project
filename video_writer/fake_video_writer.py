@@ -1,16 +1,24 @@
 from datetime import datetime
+import os
 from video_writer.video_writer_interface import VideoWriterInterface
 
 
 class FakeVideoWriter(VideoWriterInterface):
-    def __init__(self):
+    def __init__(self, directory=""):
         self.frames = False
+        self.memory = []
+        self.directory = directory
+
+    def set_directory(self, directory):
+        self.directory = directory
 
     def __call__(self, file_name=None, include_timestamp=False, buffer=None):
         self.file_name = self._generate_file_name(
             file_name=file_name, include_timestamp=include_timestamp
         )
         self.buffer = buffer
+        if buffer:
+            self.memory.extend(list(buffer.queue))
         return self
 
     def __enter__(self):
@@ -28,12 +36,15 @@ class FakeVideoWriter(VideoWriterInterface):
 
     def release(self):
         self.frames = False
+        print(self.memory)
+        self.memory = []
         with open(self.file_name, "w"):
             pass
 
     def write(self, frame):
         if not self.is_open():
             raise AttributeError("Cannot write if writer is not open.")
+        self.memory.append(frame)
 
     def is_open(self):
         return self.frames
@@ -48,4 +59,4 @@ class FakeVideoWriter(VideoWriterInterface):
             else ""
         )
 
-        return f"{file_name}_{timestamp}".strip("_")
+        return os.path.join(self.directory, f"{file_name}_{timestamp}".strip("_"))
